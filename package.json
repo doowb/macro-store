@@ -10,7 +10,8 @@
   },
   "license": "MIT",
   "files": [
-    "index.js"
+    "index.js",
+    "utils.js"
   ],
   "main": "index.js",
   "engines": {
@@ -19,22 +20,44 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {},
+  "dependencies": {
+    "data-store": "^0.16.0",
+    "debug": "^2.2.0",
+    "lazy-cache": "^2.0.1"
+  },
   "devDependencies": {
     "gulp-format-md": "*",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "rimraf": "^2.5.2"
   },
-  "keywords": [],
+  "keywords": [
+    "assemble",
+    "cli",
+    "data",
+    "data-store",
+    "generate",
+    "macro",
+    "macro-store",
+    "macros",
+    "store",
+    "update",
+    "verb"
+  ],
   "verb": {
+    "toc": false,
     "layout": "default",
+    "tasks": [
+      "readme"
+    ],
     "plugins": [
       "gulp-format-md"
     ],
-    "related": {
-      "list": []
-    },
     "reflinks": [
-      "verb"
-    ]
+      "verb",
+      "data-store"
+    ],
+    "lint": {
+      "reflinks": true
+    }
   }
 }
