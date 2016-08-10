@@ -49,7 +49,8 @@ var Store = require('./lib/store');
  */
 
 module.exports = function macros(argv, options) {
-  if (!argv || !Array.isArray(argv)) {
+  argv = utils.arrayify(argv);
+  if (!argv.length) {
     return [];
   }
 

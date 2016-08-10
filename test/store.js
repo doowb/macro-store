@@ -72,6 +72,25 @@ describe('store', function() {
     });
   });
 
+  describe('hasDelete', function() {
+    beforeEach(function() {
+      store = new utils.Store('macros', {cwd: 'actual'});
+      macros = new Macros({store: store});
+    });
+
+    it('should return true when argv contains --macro:delete', function() {
+      assert.equal(macros.hasDelete(['--macro:delete', 'foo']), true);
+      assert.equal(macros.hasDelete(['--macro:del', 'foo']), true);
+      assert.equal(macros.hasDelete(['--macro:d', 'foo']), true);
+    });
+
+    it('should return false when argv does not contain --macro:delete', function() {
+      assert.equal(macros.hasDelete(['foo', 'bar', 'baz']), false);
+      assert.equal(macros.hasDelete(['foo', '--macro:delete']), false);
+      assert.equal(macros.hasDelete(['--macro', 'foo']), false);
+    });
+  });
+
   describe('set', function() {
     beforeEach(function() {
       store = new utils.Store('macros', {cwd: 'actual'});
