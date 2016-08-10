@@ -2,8 +2,6 @@
 
 require('mocha');
 
-var os = require('os');
-var path = require('path');
 var rimraf = require('rimraf');
 var assert = require('assert');
 var utils = require('../lib/utils');
@@ -19,6 +17,10 @@ describe('macro-store', function() {
 
   it('should export a function', function() {
     assert.equal(typeof macros, 'function');
+  });
+
+  it('should return early when nothing is in the array', function() {
+    assert.deepEqual(macros([]), []);
   });
 
   it('should set a macro', function() {
@@ -42,5 +44,13 @@ describe('macro-store', function() {
 
     macros(['--macro:delete', 'foo'], {store: store});
     assert.deepEqual(macros('foo', {store: store}), ['foo']);
+  });
+
+  it('should return early when `--macro:delete` is specified but no name is specified', function() {
+    macros(['foo', '--macro', 'foo', 'bar', 'baz'], {store: store});
+    assert.deepEqual(macros('foo', {store: store}), ['foo', 'bar', 'baz']);
+
+    macros(['--macro:delete'], {store: store});
+    assert.deepEqual(macros('foo', {store: store}), ['foo', 'bar', 'baz']);
   });
 });

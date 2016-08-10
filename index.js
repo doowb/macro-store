@@ -57,7 +57,6 @@ module.exports = function macros(argv, options) {
   var opts = utils.extend({}, options);
   var store = new Store(opts);
 
-  var orig = argv.slice();
   if (store.has(argv)) {
     store.set(argv);
     return [];

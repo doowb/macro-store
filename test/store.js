@@ -70,6 +70,10 @@ describe('store', function() {
     it('should return false when argv does not contain --macro', function() {
       assert.equal(macros.has(['foo', 'bar', 'baz']), false);
     });
+
+    it('should return false when argv is empty', function() {
+      assert.equal(macros.has([]), false);
+    });
   });
 
   describe('hasDelete', function() {
@@ -88,6 +92,10 @@ describe('store', function() {
       assert.equal(macros.hasDelete(['foo', 'bar', 'baz']), false);
       assert.equal(macros.hasDelete(['foo', '--macro:delete']), false);
       assert.equal(macros.hasDelete(['--macro', 'foo']), false);
+    });
+
+    it('should return false when argv is empty', function() {
+      assert.equal(macros.hasDelete([]), false);
     });
   });
 
