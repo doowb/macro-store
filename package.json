@@ -27,7 +27,11 @@
     "lazy-cache": "^2.0.1"
   },
   "devDependencies": {
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-eslint": "^3.0.1",
     "gulp-format-md": "^0.1.10",
+    "gulp-istanbul": "^1.0.0",
+    "gulp-mocha": "^3.0.0",
     "mocha": "^3.0.2",
     "rimraf": "^2.5.4"
   },
