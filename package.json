@@ -21,14 +21,14 @@
     "test": "mocha"
   },
   "dependencies": {
-    "data-store": "^0.16.0",
+    "data-store": "^0.16.1",
     "debug": "^2.2.0",
     "lazy-cache": "^2.0.1"
   },
   "devDependencies": {
-    "gulp-format-md": "^0.1.9",
-    "mocha": "^2.5.3",
-    "rimraf": "^2.5.2"
+    "gulp-format-md": "^0.1.10",
+    "mocha": "^3.0.2",
+    "rimraf": "^2.5.4"
   },
   "keywords": [
     "assemble",
