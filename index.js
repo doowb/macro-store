@@ -12,8 +12,11 @@ var Store = require('./lib/store');
 
 /**
  * Handle macro processing and storing for an array of arguments.
+ *
  * Set macros by specifying the macro name as the first argument, `--macro` as the second argument, and the macro value as the rest of the arguments
+ *
  * Remove a macro by specifying `--macro:delete` as the first argument and the macro name as the second argument
+ *
  * Default is to replace values in the array with stored macro values (if found)
  *
  * ```js

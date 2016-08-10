@@ -58,11 +58,16 @@
       "gulp-format-md"
     ],
     "reflinks": [
+      "data-store",
       "verb",
-      "data-store"
+      "date-store",
+      "verb-generate-readme"
     ],
     "lint": {
       "reflinks": true
+    },
+    "related": {
+      "list": []
     }
   }
 }
