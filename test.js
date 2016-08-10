@@ -6,7 +6,7 @@ var os = require('os');
 var path = require('path');
 var rimraf = require('rimraf');
 var assert = require('assert');
-var utils = require('./utils');
+var utils = require('./lib/utils');
 var Macros = require('./');
 var macros;
 var store;
