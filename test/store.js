@@ -6,12 +6,12 @@ var os = require('os');
 var path = require('path');
 var rimraf = require('rimraf');
 var assert = require('assert');
-var utils = require('./lib/utils');
-var Macros = require('./');
+var utils = require('../lib/utils');
+var Macros = require('../').Store;
 var macros;
 var store;
 
-describe('macro-store', function() {
+describe('store', function() {
   beforeEach(rimraf.bind(rimraf, 'actual'));
   afterEach(rimraf.bind(rimraf, 'actual'));
 
