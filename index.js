@@ -113,7 +113,7 @@ module.exports = function macros(name, config) {
  * ```js
  * var store = new macros.Store('custom-macro-store');
  * ```
- * @name Store
+ * @name .Store
  * @api public
  */
 

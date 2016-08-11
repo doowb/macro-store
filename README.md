@@ -21,6 +21,14 @@ var args = parser(process.argv.slice(2));
 //=> { _: ['foo', 'bar', 'baz'], verbose: true, cwd: 'qux' }
 ```
 
+The returned `args` object also contains the [store methods](#store-1) to give implementors direct access to [setting](#set), [getting](#get), and [deleting](#del) macros in the store.
+
+```js
+args.set('foo', ['bar', 'baz', 'bang']);
+args.get('foo');
+//=> ['bar', 'baz', 'bang']
+```
+
 ## CLI examples
 
 The following examples are using the [example file](example.js) run at the command line with `node example.js`.
@@ -118,7 +126,7 @@ Parser function used to parse the argv array and process macros.
 * `options` **{Object}**: Additional options to pass to the argv parser
 * `returns` **{Object}** `args`: object [described above](#macros)
 
-### [Store](index.js#L120)
+### [.Store](index.js#L120)
 
 Exposes `Store` for low level access
 
