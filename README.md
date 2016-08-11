@@ -12,8 +12,13 @@ $ npm install --save macro-store
 
 ## Usage
 
+Create a [parser](#parser) function that works like [yargs-parser](https://github.com/yargs/yargs-parser) or [minimist](https://github.com/substack/minimist) and handles [creating](#create-a-macro), [using](#use-a-macro), and [removing](#delete-a-macro) macros through command line arguments.
+
 ```js
 var macros = require('macro-store');
+var parser = macros('macro-store');
+var args = parser(process.argv.slice(2));
+//=> { _: ['foo', 'bar', 'baz'], verbose: true, cwd: 'qux' }
 ```
 
 ## CLI examples
@@ -31,7 +36,7 @@ The following shows creating a simple macro called `foo`.
 
 ### Use a macro
 
-The following shows using the `foo` macro, and that the resulting `args` object contains the example value.
+The following shows using the `foo` macro, and that the resulting `args` object contains the expanded value.
 
 ![image](docs/get-simple-macro.png)
 

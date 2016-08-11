@@ -62,7 +62,9 @@
       "data-store",
       "date-store",
       "verb",
-      "verb-generate-readme"
+      "verb-generate-readme",
+      "minimist",
+      "yargs-parser"
     ],
     "lint": {
       "reflinks": true
