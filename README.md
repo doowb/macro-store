@@ -83,6 +83,8 @@ var res = parser(argv);
 // =>  }
 ```
 
+### [parser](index.js#L99)
+
 Parser function used to parse the argv array and process macros.
 
 **Params**
@@ -91,7 +93,7 @@ Parser function used to parse the argv array and process macros.
 * `options` **{Object}**: Additional options to pass to the argv parser
 * `returns` **{Object}**: Results object [described above](#macros)
 
-### [Store](index.js#L154)
+### [Store](index.js#L155)
 
 Exposes `Store` for low level access
 

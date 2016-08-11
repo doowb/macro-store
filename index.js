@@ -89,6 +89,7 @@ module.exports = function macros(name, config) {
   /**
    * Parser function used to parse the argv array and process macros.
    *
+   * @name parser
    * @param  {Array} `argv` Array of arguments to process
    * @param  {Object} `options` Additional options to pass to the argv parser
    * @return {Object} Results object [described above](#macros)
