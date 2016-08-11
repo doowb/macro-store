@@ -18,49 +18,80 @@ var macros = require('macro-store');
 
 ## API
 
-### [macros](index.js#L54)
+### [macros](index.js#L77)
 
 Handle macro processing and storing for an array of arguments.
 
-Set macros by specifying the macro name as the first argument, `--macro` as the second argument, and the macro value as the rest of the arguments
-Remove a macro by specifying `--macro:delete` as the first argument and the macro name as the second argument
-Default is to replace values in the array with stored macro values (if found)
+Set macros by specifying using the `--macro` option and a list of values.
+Remove a macro by specifying `--macro` and `--del` options.
+Default is to replace values in the `argv` array with stored macro values (if found).
 
 **Params**
 
-* `argv` **{Array}**: Array of arguments to process
+* `name` **{String}**: Custom name of the [data-store](https://github.com/jonschlinkert/data-store) to use. Defaults to 'macros'.
 * `options` **{Object}**: Options to pass to the store to control the name or instance of the [date-store](https://github.com/jonschlinkert/date-store)
 * `options.name` **{String}**: Name of the [data-store](https://github.com/jonschlinkert/data-store) to use for storing macros. Defaults to `macros`
 * `options.store` **{Object}**: Instance of [data-store](https://github.com/jonschlinkert/data-store) to use. Defaults to `new DataStore(options.name)`
-* `returns` **{Array}**: Resulting array of arguments after processing the initial argv.
+* `options.parser` **{Function}**: Custom argv parser to use. Defaults to [yargs-parser](https://github.com/yargs/yargs-parser)
+* `returns` **{Function}**: argv parser to process macros
 
 **Example**
 
 ```js
+// create an argv parser
+var parser = macros('custom-macro-store');
+
 // get arguments from the command line input
 var argv = process.argv.slice(2);
 
-// process the input using a custom store name (specified on options)
-args = macros(argv, { name: 'custom-macro-store' });
+// parse the input
+var res = parser(argv);
+// =>  {
+// =>    action: 'get', // ['none', 'set', 'get', 'del'],
+// =>    orig: ['foo'], // original argv array
+// =>    argv: ['bar'], // updated argv array (if get action)
+// =>    args: { _: ['foo'] } // parsed args from the specified parser.
+// =>  }
 
-// following input will produce the following args:
+// following input will produce the following results:
 //
 // Set 'foo' as ['bar', 'baz', 'bang']
-// $ app foo --macro bar baz bang
-//
-// Nothing is returned
-// => []
+// $ app --macro foo bar baz bang
+// =>  {
+// =>    action: 'set',
+// =>    orig: ['--macro', 'foo', 'bar', 'baz', 'bang'],
+// =>    argv: ['--macro', 'foo', 'bar', 'baz', 'bang'],
+// =>    args: { _: ['bar', 'baz', 'bang'], macro: 'foo' }
+// =>  }
 //
 // Use 'foo'
 // $ app foo
-// => ['bar', 'baz', 'bang']
+// =>  {
+// =>    action: 'get',
+// =>    orig: ['foo'],
+// =>    argv: ['bar', 'baz', 'bang'],
+// =>    args: { _: ['foo'] }
+// =>  }
 //
 // Remove the 'foo' macro
-// $ app --macro:delete foo
-// => []
+// $ app --macro --del foo
+// =>  {
+// =>    action: 'del',
+// =>    orig: ['--macro', '--del', 'foo'],
+// =>    argv: ['--macro', '--del', 'foo'],
+// =>    args: { _: [], macro: true, del: 'foo' }
+// =>  }
 ```
 
-### [Store](index.js#L92)
+Parser function used to parse the argv array and process macros.
+
+**Params**
+
+* `argv` **{Array}**: Array of arguments to process
+* `options` **{Object}**: Additional options to pass to the argv parser
+* `returns` **{Object}**: Results object [described above](#macros)
+
+### [Store](index.js#L154)
 
 Exposes `Store` for low level access
 
@@ -90,62 +121,23 @@ var macroStore = new Store({name: 'abc'});
 //=> '~/data-store/abc.json'
 ```
 
-### [.has](lib/store.js#L56)
+### [.set](lib/store.js#L53)
 
-Check if an argv array contains the --macro option as the second item in the array.
-
-**Params**
-
-* `argv` **{Array}**: Array of arguments from process.argv
-* `returns` **{Boolean}**: If the array contains '--macro' in the second item.
-
-**Example**
-
-```js
-macroStore.has(['foo', '--macro']);
-//=> true
-
-macroStore.has(['foo']);
-//=> false
-```
-
-### [.hasDelete](lib/store.js#L82)
-
-Check if an argv array contains the --macro:delete option as the first item in the array.
+Set a macro in the store.
 
 **Params**
 
-* `argv` **{Array}**: Array of arguments from process.argv
-* `returns` **{Boolean}**: If the array contains '--macro:delete' in the first item.
-
-**Example**
-
-```js
-macroStore.hasDelete(['--macro:delete']);
-//=> true
-
-macroStore.has(['foo']);
-//=> false
-macroStore.has(['--macro']);
-//=> false
-```
-
-### [.set](lib/store.js#L103)
-
-Set a macro in the store from the given argv array.
-
-**Params**
-
-* `argv` **{Array}**: process.argv array.
+* `key` **{String}**: Name of the macro to set.
+* `arr` **{Array}**: Array of strings that the macro will resolve to.
 * `returns` **{Object}** `this`: for chaining
 
 **Example**
 
 ```js
-macroStore.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+macroStore.set('foo', ['foo', 'bar', 'baz']);
 ```
 
-### [.get](lib/store.js#L125)
+### [.get](lib/store.js#L75)
 
 Get a macro from the store.
 
@@ -165,13 +157,13 @@ var tasks = macroStore.get('bar');
 //=> 'bar'
 ```
 
-### [.del](lib/store.js#L142)
+### [.del](lib/store.js#L92)
 
 Remove a macro from the store.
 
 **Params**
 
-* `name` **{String}**: Name of macro to remove.
+* `name` **{String|Array}**: Name of a macro or array of macros to remove.
 * `returns` **{Object}** `this`: for chaining
 
 **Example**
