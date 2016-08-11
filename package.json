@@ -24,7 +24,8 @@
     "data-store": "^0.16.1",
     "debug": "^2.2.0",
     "extend-shallow": "^2.0.1",
-    "lazy-cache": "^2.0.1"
+    "lazy-cache": "^2.0.1",
+    "yargs-parser": "^3.1.0"
   },
   "devDependencies": {
     "gulp": "github:gulpjs/gulp#4.0",
