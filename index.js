@@ -43,7 +43,7 @@ var Store = require('./lib/store');
  * ```
  *
  * @param  {String} `name` Custom name of the [data-store][] to use. Defaults to 'macros'.
- * @param  {Object} `options` Options to pass to the store to control the name or instance of the [date-store][]
+ * @param  {Object} `options` Options to pass to the store to control the name or instance of the [data-store][]
  * @param  {String} `options.name` Name of the [data-store][] to use for storing macros. Defaults to `macros`
  * @param  {Object} `options.store` Instance of [data-store][] to use. Defaults to `new DataStore(options.name)`
  * @param  {Function} `options.parser` Custom argv parser to use. Defaults to [yargs-parser][]

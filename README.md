@@ -77,7 +77,7 @@ Default is to replace values in the `argv` array with stored macro values (if fo
 **Params**
 
 * `name` **{String}**: Custom name of the [data-store](https://github.com/jonschlinkert/data-store) to use. Defaults to 'macros'.
-* `options` **{Object}**: Options to pass to the store to control the name or instance of the [date-store](https://github.com/jonschlinkert/date-store)
+* `options` **{Object}**: Options to pass to the store to control the name or instance of the [data-store](https://github.com/jonschlinkert/data-store)
 * `options.name` **{String}**: Name of the [data-store](https://github.com/jonschlinkert/data-store) to use for storing macros. Defaults to `macros`
 * `options.store` **{Object}**: Instance of [data-store](https://github.com/jonschlinkert/data-store) to use. Defaults to `new DataStore(options.name)`
 * `options.parser` **{Function}**: Custom argv parser to use. Defaults to [yargs-parser](https://github.com/yargs/yargs-parser)
@@ -200,6 +200,14 @@ macroStore.del('foo');
 ```
 
 ## About
+
+### Related projects
+
+* [data-store](https://www.npmjs.com/package/data-store): Easily get, set and persist config data. | [homepage](https://github.com/jonschlinkert/data-store "Easily get, set and persist config data.")
+* [minimist](https://www.npmjs.com/package/minimist): parse argument options | [homepage](https://github.com/substack/minimist "parse argument options")
+* [verb-generate-readme](https://www.npmjs.com/package/verb-generate-readme): Generate your project's readme with verb. Requires verb v0.9.0 or higher. | [homepage](https://github.com/verbose/verb-generate-readme "Generate your project's readme with verb. Requires verb v0.9.0 or higher.")
+* [verb](https://www.npmjs.com/package/verb): Documentation generator for GitHub projects. Verb is extremely powerful, easy to use, and is used… [more](https://github.com/verbose/verb) | [homepage](https://github.com/verbose/verb "Documentation generator for GitHub projects. Verb is extremely powerful, easy to use, and is used on hundreds of projects of all sizes to generate everything from API docs to readmes.")
+* [yargs-parser](https://www.npmjs.com/package/yargs-parser): the mighty option parser used by yargs | [homepage](https://github.com/yargs/yargs-parser#readme "the mighty option parser used by yargs")
 
 ### Contributing
 
