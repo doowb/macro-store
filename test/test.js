@@ -25,102 +25,57 @@ describe('macro-store', function() {
     assert.equal(typeof macros('custom-macros-store'), 'function');
   });
 
-  it('should set a macro', function() {
-    var expected = {
-      action: 'set',
-      orig: ['--macro', 'foo', 'foo', 'bar', 'baz'],
-      argv: ['--macro', 'foo', 'foo', 'bar', 'baz'],
-      args: {_: ['foo', 'bar', 'baz'], macro: 'foo'}
-    };
-
+  it('should set a macro using `--macro`', function() {
     var res = parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
-    assert.deepEqual(res, expected);
+    assert.deepEqual(res, { _: ['foo', 'bar', 'baz'], macro: 'foo' });
+    assert.deepEqual(store.get(['macro', 'foo']), ['foo', 'bar', 'baz']);
+  });
+
+  it('should set a macro using `--macro set`', function() {
+    var res = parser(['--macro', 'set', 'foo', 'foo', 'bar', 'baz']);
+    assert.deepEqual(res, { _: ['foo', 'foo', 'bar', 'baz'], macro: 'set' });
+    assert.deepEqual(store.get(['macro', 'foo']), ['foo', 'bar', 'baz']);
+  });
+
+  it('should set a macro using `--macro=set`', function() {
+    var res = parser(['--macro=set', 'foo', 'foo', 'bar', 'baz']);
+    assert.deepEqual(res, { _: ['foo', 'foo', 'bar', 'baz'], macro: 'set' });
     assert.deepEqual(store.get(['macro', 'foo']), ['foo', 'bar', 'baz']);
   });
 
   it('should get macros from the store', function() {
-    var expected = {
-      action: 'get',
-      orig: ['foo'],
-      argv: ['foo', 'bar', 'baz'],
-      args: {_: ['foo']}
-    };
-
     parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
-    assert.deepEqual(parser('foo'), expected);
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'] });
+  });
+
+  it('should get a complex macro from the store', function() {
+    parser(['--macro', 'foo', 'foo', 'bar', 'baz', '--verbose', '--cwd', 'docs']);
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'], verbose: true, cwd: 'docs' });
   });
 
   it('should return original name when macro is not set in the store', function() {
-    var expected = {
-      action: 'get',
-      orig: ['foo'],
-      argv: ['foo'],
-      args: {_: ['foo']}
-    };
-
-    assert.deepEqual(parser('foo'), expected);
+    assert.deepEqual(parser('foo'), { _: ['foo'] });
   });
 
   it('should not process macros when `--no-macro` is set', function() {
-    var expected = {
-      action: 'none',
-      orig: ['foo', '--no-macro'],
-      argv: ['foo', '--no-macro'],
-      args: {_: ['foo'], macro: false}
-    };
-
-    assert.deepEqual(parser(['foo', '--no-macro']), expected);
+    assert.deepEqual(parser(['foo', '--no-macro']), { _: ['foo'], macro: false });
   });
 
   it('should del macros from the store', function() {
-    var expected = {
-      action: 'get',
-      orig: ['foo'],
-      argv: ['foo', 'bar', 'baz'],
-      args: { _: ['foo'] }
-    };
-
     parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
-    assert.deepEqual(parser('foo'), expected);
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'] });
 
-    expected = {
-      action: 'get',
-      orig: ['foo'],
-      argv: ['foo'],
-      args: {_: ['foo']}
-    };
-
-    parser(['--macro', '--del', 'foo']);
-    assert.deepEqual(parser('foo'), expected);
+    parser(['--macro', 'del', 'foo']);
+    assert.deepEqual(parser('foo'), { _: ['foo'] });
   });
 
   it('should delete all macros when no macro is specified for `--del`', function() {
     parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
     parser(['--macro', 'qux', 'beep', 'boop', 'bop']);
-    var expected = {
-      action: 'get',
-      orig: ['foo'],
-      argv: ['foo', 'bar', 'baz'],
-      args: {_: ['foo']}
-    };
-    assert.deepEqual(parser('foo'), expected);
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'] });
+    assert.deepEqual(parser('qux'), { _: ['beep', 'boop', 'bop'] });
 
-    expected = {
-      action: 'get',
-      orig: ['qux'],
-      argv: ['beep', 'boop', 'bop'],
-      args: {_: ['qux']}
-    };
-    assert.deepEqual(parser('qux'), expected);
-
-    expected = {
-      action: 'get',
-      orig: ['foo', 'qux'],
-      argv: ['foo', 'qux'],
-      args: {_: ['foo', 'qux']}
-    };
-
-    parser(['--macro', '--del']);
-    assert.deepEqual(parser(['foo', 'qux']), expected);
+    parser(['--macro', 'del']);
+    assert.deepEqual(parser(['foo', 'qux']), { _: ['foo', 'qux'] });
   });
 });
