@@ -13,9 +13,9 @@ var Store = require('./lib/store');
 /**
  * Handle macro processing and storing for an array of arguments.
  *
- * Set macros by specifying using the `--macro` option and a list of values.
+ * Set macros by specifying using the `--macro` or `--macro=set` option and a list of values.
  *
- * Remove a macro by specifying `--macro` and `--del` options.
+ * Remove a macro by specifying `--macro=del` option and the macro name.
  *
  * Default is to replace values in the `argv` array with stored macro values (if found).
  *
@@ -23,50 +23,27 @@ var Store = require('./lib/store');
  * // create an argv parser
  * var parser = macros('custom-macro-store');
  *
- * // get arguments from the command line input
- * var argv = process.argv.slice(2);
- *
- * // parse the input
- * var res = parser(argv);
- * // =>  {
- * // =>    action: 'get', // ['none', 'set', 'get', 'del'],
- * // =>    orig: ['foo'], // original argv array
- * // =>    argv: ['bar'], // updated argv array (if get action)
- * // =>    args: { _: ['foo'] } // parsed args from the specified parser.
- * // =>  }
+ * // parse the argv
+ * var args = parser(process.argv.slice(2));
+ * // => { _: ['foo'] }
  *
  * // following input will produce the following results:
  * //
  * // Set 'foo' as ['bar', 'baz', 'bang']
  * // $ app --macro foo bar baz bang
- * // =>  {
- * // =>    action: 'set',
- * // =>    orig: ['--macro', 'foo', 'bar', 'baz', 'bang'],
- * // =>    argv: ['--macro', 'foo', 'bar', 'baz', 'bang'],
- * // =>    args: { _: ['bar', 'baz', 'bang'], macro: 'foo' }
- * // =>  }
+ * // => { _: [ 'bar', 'baz', 'bang' ], macro: 'foo' }
  * //
  * // Use 'foo'
  * // $ app foo
- * // =>  {
- * // =>    action: 'get',
- * // =>    orig: ['foo'],
- * // =>    argv: ['bar', 'baz', 'bang'],
- * // =>    args: { _: ['foo'] }
- * // =>  }
+ * // => { _: [ 'bar', 'baz', 'bang' ] }
  * //
  * // Remove the 'foo' macro
  * // $ app --macro --del foo
- * // =>  {
- * // =>    action: 'del',
- * // =>    orig: ['--macro', '--del', 'foo'],
- * // =>    argv: ['--macro', '--del', 'foo'],
- * // =>    args: { _: [], macro: true, del: 'foo' }
- * // =>  }
+ * // => { _: [ 'foo' ], macro: 'del' }
  * ```
  *
  * @param  {String} `name` Custom name of the [data-store][] to use. Defaults to 'macros'.
- * @param  {Object} `options` Options to pass to the store to control the name or instance of the [date-store][]
+ * @param  {Object} `options` Options to pass to the store to control the name or instance of the [data-store][]
  * @param  {String} `options.name` Name of the [data-store][] to use for storing macros. Defaults to `macros`
  * @param  {Object} `options.store` Instance of [data-store][] to use. Defaults to `new DataStore(options.name)`
  * @param  {Function} `options.parser` Custom argv parser to use. Defaults to [yargs-parser][]
@@ -92,52 +69,40 @@ module.exports = function macros(name, config) {
    * @name parser
    * @param  {Array} `argv` Array of arguments to process
    * @param  {Object} `options` Additional options to pass to the argv parser
-   * @return {Object} Results object [described above](#macros)
+   * @return {Object} `args` object [described above](#macros)
    * @api public
    */
 
   return function parser(argv, options) {
     argv = utils.arrayify(argv);
-    var res = {
-      action: 'none',
-      orig: argv.slice(),
-      argv: argv.slice(),
-      args: parse(argv, utils.extend({}, options))
-    };
 
-    if (res.args.macro === false) {
-      return res;
-    }
+    var opts = utils.extend({}, options);
+    var args = parse(argv, opts);
+    var val;
 
-    // $ app --macro
-    // $ app --macro=foo
-    // $ app --macro foo
-    if (res.args.macro) {
-
-      // $ app --macro --del
-      // $ app --macro --del=foo
-      // $ app --macro --del foo
-      if (res.args.del) {
-        res.action = 'del';
-        store.del(res.args.del === true ? res.args._ : [res.args.del].concat(res.args._));
-        return res;
+    switch (args.macro) {
+      case undefined:
+        // fall through
+      case 'get':
+        val = args._[0] && store.get(args._[0]);
+        if (val === args._[0]) {
+          val = null;
+        }
+        break;
+      case 'del':
+        store.del(args._[0]);
+        break;
+      case 'set':
+        store.set(args._[0], utils.getValues(argv, 3));
+        break;
+      default: {
+        store.set(args.macro, utils.getValues(argv, 2));
+        break;
       }
-
-      // $ app --macro=foo bar baz bang
-      // $ app --macro foo bar baz bang
-      res.action = 'set';
-      store.set(res.args.macro, res.args._);
-      return res;
     }
 
-    var arr = [];
-    res.action = 'get';
-    res.args._.forEach(function(arg) {
-      var val = store.get(arg);
-      arr = arr.concat(val);
-    });
-
-    res.argv = arr.slice();
+    var res = val ? parse(val, opts) : args;
+    res.__proto__ = store;
     return res;
   };
 };
@@ -146,9 +111,9 @@ module.exports = function macros(name, config) {
  * Exposes `Store` for low level access
  *
  * ```js
- * var store = new macros.Store({name: 'custom-macro-store'});
+ * var store = new macros.Store('custom-macro-store');
  * ```
- * @name Store
+ * @name .Store
  * @api public
  */
 

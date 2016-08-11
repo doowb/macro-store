@@ -60,15 +60,22 @@
     ],
     "reflinks": [
       "data-store",
-      "date-store",
+      "minimist",
       "verb",
-      "verb-generate-readme"
+      "verb-generate-readme",
+      "yargs-parser"
     ],
     "lint": {
       "reflinks": true
     },
     "related": {
-      "list": []
+      "list": [
+        "data-store",
+        "minimist",
+        "verb",
+        "verb-generate-readme",
+        "yargs-parser"
+      ]
     }
   }
 }

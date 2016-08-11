@@ -7,7 +7,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var assert = require('assert');
 var utils = require('../lib/utils');
-var Macros = require('../').Store;
+var MacroStore = require('../').Store;
 var macros;
 var store;
 
@@ -16,21 +16,21 @@ describe('store', function() {
   afterEach(rimraf.bind(rimraf, 'actual'));
 
   it('should export a function', function() {
-    assert.equal(typeof Macros, 'function');
+    assert.equal(typeof MacroStore, 'function');
   });
 
   it('should create an instance', function() {
-    macros = new Macros();
+    macros = new MacroStore();
     assert(macros, 'Expected a new instance to be created.');
   });
 
   it('should create an instance without using new', function() {
-    macros = Macros();
+    macros = MacroStore();
     assert(macros, 'Expected a new instance to be created.');
   });
 
   it('should create an instance with defaults', function() {
-    macros = new Macros();
+    macros = new MacroStore();
     assert(macros, 'Expected a new instance to be created.');
     assert(macros.store, 'Expected a new data-store instance to be created.');
     assert.equal(macros.store.name, 'macros');
@@ -39,7 +39,16 @@ describe('store', function() {
   });
 
   it('should create an instance with a custom name', function() {
-    macros = new Macros({name: 'test-macros'});
+    macros = new MacroStore({name: 'test-macros'});
+    assert(macros, 'Expected a new instance to be created.');
+    assert(macros.store, 'Expected a new data-store instance to be created.');
+    assert.equal(macros.store.name, 'test-macros');
+    assert.equal(macros.store.cwd, path.join(os.homedir(), '.data-store'));
+    assert.equal(macros.store.path, path.join(os.homedir(), '.data-store', 'test-macros.json'));
+  });
+
+  it('should create an instance with a custom name passed as a string', function() {
+    macros = new MacroStore('test-macros');
     assert(macros, 'Expected a new instance to be created.');
     assert(macros.store, 'Expected a new data-store instance to be created.');
     assert.equal(macros.store.name, 'test-macros');
@@ -49,7 +58,7 @@ describe('store', function() {
 
   it('should create an instance with a custom data-store', function() {
     store = new utils.Store('macros', {cwd: 'actual'});
-    macros = new Macros({store: store});
+    macros = new MacroStore({store: store});
     assert(macros, 'Expected a new instance to be created.');
     assert(macros.store, 'Expected a new data-store instance to be created.');
     assert.equal(macros.store.name, 'macros');
@@ -60,7 +69,7 @@ describe('store', function() {
   describe('set', function() {
     beforeEach(function() {
       store = new utils.Store('macros', {cwd: 'actual'});
-      macros = new Macros({store: store});
+      macros = new MacroStore({store: store});
     });
 
     it('should set macros on the store', function() {
@@ -72,7 +81,7 @@ describe('store', function() {
   describe('get', function() {
     beforeEach(function() {
       store = new utils.Store('macros', {cwd: 'actual'});
-      macros = new Macros({store: store});
+      macros = new MacroStore({store: store});
     });
 
     it('should get macros from the store', function() {
@@ -88,7 +97,7 @@ describe('store', function() {
   describe('del', function() {
     beforeEach(function() {
       store = new utils.Store('macros', {cwd: 'actual'});
-      macros = new Macros({store: store});
+      macros = new MacroStore({store: store});
     });
 
     it('should del macros from the store', function() {
