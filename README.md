@@ -18,8 +18,10 @@ var macros = require('macro-store');
 
 ## CLI examples
 
-The following examples are using the [example file][example.js] run at the command line with `node example.js`.
+The following examples are using the [example file](example.js) run at the command line with `node example.js`.
 The objects returned may be used in implementing applications however they choose.
+
+Jump to [the API documentation](#api) for implementation information.
 
 ### Setting and getting a macro
 
