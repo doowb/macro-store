@@ -6,12 +6,12 @@ var os = require('os');
 var path = require('path');
 var rimraf = require('rimraf');
 var assert = require('assert');
-var utils = require('./utils');
-var Macros = require('./');
+var utils = require('../lib/utils');
+var Macros = require('../').Store;
 var macros;
 var store;
 
-describe('macro-store', function() {
+describe('store', function() {
   beforeEach(rimraf.bind(rimraf, 'actual'));
   afterEach(rimraf.bind(rimraf, 'actual'));
 
@@ -57,21 +57,6 @@ describe('macro-store', function() {
     assert.equal(macros.store.path, path.resolve('actual', 'macros.json'));
   });
 
-  describe('has', function() {
-    beforeEach(function() {
-      store = new utils.Store('macros', {cwd: 'actual'});
-      macros = new Macros({store: store});
-    });
-
-    it('should return true when argv contains --macro', function() {
-      assert.equal(macros.has(['foo', '--macro', 'foo', 'bar', 'baz']), true);
-    });
-
-    it('should return false when argv does not contain --macro', function() {
-      assert.equal(macros.has(['foo', 'bar', 'baz']), false);
-    });
-  });
-
   describe('set', function() {
     beforeEach(function() {
       store = new utils.Store('macros', {cwd: 'actual'});
@@ -79,7 +64,7 @@ describe('macro-store', function() {
     });
 
     it('should set macros on the store', function() {
-      macros.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+      macros.set('foo', ['foo', 'bar', 'baz']);
       assert.deepEqual(macros.store.get(['macro', 'foo']), ['foo', 'bar', 'baz']);
     });
   });
@@ -91,7 +76,7 @@ describe('macro-store', function() {
     });
 
     it('should get macros from the store', function() {
-      macros.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+      macros.set('foo', ['foo', 'bar', 'baz']);
       assert.deepEqual(macros.get('foo'), ['foo', 'bar', 'baz']);
     });
 
@@ -107,7 +92,7 @@ describe('macro-store', function() {
     });
 
     it('should del macros from the store', function() {
-      macros.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+      macros.set('foo', ['foo', 'bar', 'baz']);
       assert.deepEqual(macros.get('foo'), ['foo', 'bar', 'baz']);
 
       macros.del('foo');
