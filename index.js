@@ -125,8 +125,7 @@ module.exports = function macros(name, config) {
       // $ app --macro=foo bar baz bang
       // $ app --macro foo bar baz bang
       res.action = 'set';
-      var key = res.args.macro === true ? res.args._[0] : res.args.macro;
-      store.set(key, res.args._.slice());
+      store.set(res.args.macro, res.args._);
       return res;
     }
 

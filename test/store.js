@@ -57,48 +57,6 @@ describe('store', function() {
     assert.equal(macros.store.path, path.resolve('actual', 'macros.json'));
   });
 
-  describe('has', function() {
-    beforeEach(function() {
-      store = new utils.Store('macros', {cwd: 'actual'});
-      macros = new Macros({store: store});
-    });
-
-    it('should return true when argv contains --macro', function() {
-      assert.equal(macros.has(['foo', '--macro', 'foo', 'bar', 'baz']), true);
-    });
-
-    it('should return false when argv does not contain --macro', function() {
-      assert.equal(macros.has(['foo', 'bar', 'baz']), false);
-    });
-
-    it('should return false when argv is empty', function() {
-      assert.equal(macros.has([]), false);
-    });
-  });
-
-  describe('hasDelete', function() {
-    beforeEach(function() {
-      store = new utils.Store('macros', {cwd: 'actual'});
-      macros = new Macros({store: store});
-    });
-
-    it('should return true when argv contains --macro:delete', function() {
-      assert.equal(macros.hasDelete(['--macro:delete', 'foo']), true);
-      assert.equal(macros.hasDelete(['--macro:del', 'foo']), true);
-      assert.equal(macros.hasDelete(['--macro:d', 'foo']), true);
-    });
-
-    it('should return false when argv does not contain --macro:delete', function() {
-      assert.equal(macros.hasDelete(['foo', 'bar', 'baz']), false);
-      assert.equal(macros.hasDelete(['foo', '--macro:delete']), false);
-      assert.equal(macros.hasDelete(['--macro', 'foo']), false);
-    });
-
-    it('should return false when argv is empty', function() {
-      assert.equal(macros.hasDelete([]), false);
-    });
-  });
-
   describe('set', function() {
     beforeEach(function() {
       store = new utils.Store('macros', {cwd: 'actual'});
@@ -106,7 +64,7 @@ describe('store', function() {
     });
 
     it('should set macros on the store', function() {
-      macros.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+      macros.set('foo', ['foo', 'bar', 'baz']);
       assert.deepEqual(macros.store.get(['macro', 'foo']), ['foo', 'bar', 'baz']);
     });
   });
@@ -118,7 +76,7 @@ describe('store', function() {
     });
 
     it('should get macros from the store', function() {
-      macros.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+      macros.set('foo', ['foo', 'bar', 'baz']);
       assert.deepEqual(macros.get('foo'), ['foo', 'bar', 'baz']);
     });
 
@@ -134,7 +92,7 @@ describe('store', function() {
     });
 
     it('should del macros from the store', function() {
-      macros.set(['foo', '--macro', 'foo', 'bar', 'baz']);
+      macros.set('foo', ['foo', 'bar', 'baz']);
       assert.deepEqual(macros.get('foo'), ['foo', 'bar', 'baz']);
 
       macros.del('foo');
