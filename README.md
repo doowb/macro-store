@@ -207,6 +207,37 @@ Remove a macro from the store.
 macroStore.del('foo');
 ```
 
+## Release history
+
+### key
+
+Changelog entries are classified using the following labels _(from [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog)_):
+
+* `added`: for new features
+* `changed`: for changes in existing functionality
+* `deprecated`: for once-stable features removed in upcoming releases
+* `removed`: for deprecated features removed in this release
+* `fixed`: for any bug fixes
+
+Custom labels used in this changelog:
+
+* `dependencies`: bumps dependencies
+* `housekeeping`: code re-organization, minor edits, or other changes that don't fit in one of the other categories.
+
+### v0.3.0
+
+**changed**
+
+* refactored parser to return an `args` object similar to [yargs-parser](https://github.com/yargs/yargs-parser) and [minimist](https://github.com/substack/minimist)
+* handles `--macro` option for creating, getting, and removing macros from the `args` object.
+
+### v0.2.0
+
+**changed**
+
+* refactored to export a function that creates a parser function.
+* the parser function returns an object with the action taken and the processed arguments.
+
 ## About
 
 ### Related projects
