@@ -80,7 +80,7 @@ module.exports = function macros(name, config) {
     var args = parse(argv, opts);
     var val;
 
-    switch(args.macro) {
+    switch (args.macro) {
       case undefined:
         // fall through
       case 'get':
