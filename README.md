@@ -23,30 +23,50 @@ The objects returned may be used in implementing applications however they choos
 
 Jump to [the API documentation](#api) for implementation information.
 
-### Setting and getting a macro
+### Create a macro
 
-![image](https://cloud.githubusercontent.com/assets/995160/17576116/6b11e06e-5f3d-11e6-8019-6ad574c5fc16.png)
+The following shows creating a simple macro called `foo`.
 
-### Getting multiple macros
+![image](docs/set-simple-macro.png)
 
-![image](https://cloud.githubusercontent.com/assets/995160/17576131/8940e558-5f3d-11e6-8a57-20bf52328fe0.png)
+### Use a macro
 
-### Deleting a macro
+The following shows using the `foo` macro, and that the resulting `args` object contains the example value.
 
-![image](https://cloud.githubusercontent.com/assets/995160/17576151/aa2e14ac-5f3d-11e6-9a1f-2622264f1be2.png)
+![image](docs/get-simple-macro.png)
+
+### Create a complex macro
+
+The following shows creating a complex macro called `qux` that includes options `--verbose` and `--cwd boop`.
+
+![image](docs/set-complex-macro.png)
+
+### Using a complex macro
+
+The following shows that using a complex macro is the same as a simple macro, but the `args` object contains the options `verbose: true` and `cwd: 'boop'`, which were set when creating the `qux` macro.
+
+![image](docs/get-complex-macro.png)
+
+### Delete a macro
+
+The following shows how to delete the macro `foo`. This only deletes `foo` and shows that `qux` is still set.
+
+![image](docs/delete-macro.png)
 
 ### Deleting all macros
 
-![image](https://cloud.githubusercontent.com/assets/995160/17576156/bfdec8fa-5f3d-11e6-8947-2f4570b695ee.png)
+The following shows how to delete all macros. This shows that `foo` and `qux` have been deleted so the `args` object will contain the exact values passed in from the command line.
+
+![image](docs/delete-all-macros.png)
 
 ## API
 
-### [macros](index.js#L77)
+### [macros](index.js#L54)
 
 Handle macro processing and storing for an array of arguments.
 
-Set macros by specifying using the `--macro` option and a list of values.
-Remove a macro by specifying `--macro` and `--del` options.
+Set macros by specifying using the `--macro` or `--macro=set` option and a list of values.
+Remove a macro by specifying `--macro=del` option and the macro name.
 Default is to replace values in the `argv` array with stored macro values (if found).
 
 **Params**
@@ -64,49 +84,26 @@ Default is to replace values in the `argv` array with stored macro values (if fo
 // create an argv parser
 var parser = macros('custom-macro-store');
 
-// get arguments from the command line input
-var argv = process.argv.slice(2);
-
-// parse the input
-var res = parser(argv);
-// =>  {
-// =>    action: 'get', // ['none', 'set', 'get', 'del'],
-// =>    orig: ['foo'], // original argv array
-// =>    argv: ['bar'], // updated argv array (if get action)
-// =>    args: { _: ['foo'] } // parsed args from the specified parser.
-// =>  }
+// parse the argv
+var args = parser(process.argv.slice(2));
+// => { _: ['foo'] }
 
 // following input will produce the following results:
 //
 // Set 'foo' as ['bar', 'baz', 'bang']
 // $ app --macro foo bar baz bang
-// =>  {
-// =>    action: 'set',
-// =>    orig: ['--macro', 'foo', 'bar', 'baz', 'bang'],
-// =>    argv: ['--macro', 'foo', 'bar', 'baz', 'bang'],
-// =>    args: { _: ['bar', 'baz', 'bang'], macro: 'foo' }
-// =>  }
+// => { _: [ 'bar', 'baz', 'bang' ], macro: 'foo' }
 //
 // Use 'foo'
 // $ app foo
-// =>  {
-// =>    action: 'get',
-// =>    orig: ['foo'],
-// =>    argv: ['bar', 'baz', 'bang'],
-// =>    args: { _: ['foo'] }
-// =>  }
+// => { _: [ 'bar', 'baz', 'bang' ] }
 //
 // Remove the 'foo' macro
 // $ app --macro --del foo
-// =>  {
-// =>    action: 'del',
-// =>    orig: ['--macro', '--del', 'foo'],
-// =>    argv: ['--macro', '--del', 'foo'],
-// =>    args: { _: [], macro: true, del: 'foo' }
-// =>  }
+// => { _: [ 'foo' ], macro: 'del' }
 ```
 
-### [parser](index.js#L99)
+### [parser](index.js#L76)
 
 Parser function used to parse the argv array and process macros.
 
@@ -114,16 +111,16 @@ Parser function used to parse the argv array and process macros.
 
 * `argv` **{Array}**: Array of arguments to process
 * `options` **{Object}**: Additional options to pass to the argv parser
-* `returns` **{Object}**: Results object [described above](#macros)
+* `returns` **{Object}** `args`: object [described above](#macros)
 
-### [Store](index.js#L155)
+### [Store](index.js#L120)
 
 Exposes `Store` for low level access
 
 **Example**
 
 ```js
-var store = new macros.Store({name: 'custom-macro-store'});
+var store = new macros.Store('custom-macro-store');
 ```
 
 ### [Store](lib/store.js#L30)
@@ -146,7 +143,7 @@ var macroStore = new Store({name: 'abc'});
 //=> '~/data-store/abc.json'
 ```
 
-### [.set](lib/store.js#L53)
+### [.set](lib/store.js#L56)
 
 Set a macro in the store.
 
@@ -162,7 +159,7 @@ Set a macro in the store.
 macroStore.set('foo', ['foo', 'bar', 'baz']);
 ```
 
-### [.get](lib/store.js#L75)
+### [.get](lib/store.js#L78)
 
 Get a macro from the store.
 
@@ -182,7 +179,7 @@ var tasks = macroStore.get('bar');
 //=> 'bar'
 ```
 
-### [.del](lib/store.js#L92)
+### [.del](lib/store.js#L95)
 
 Remove a macro from the store.
 
@@ -235,4 +232,4 @@ Released under the [MIT license](https://github.com/doowb/macro-store/blob/maste
 
 ***
 
-_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on August 10, 2016._
+_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on August 11, 2016._
