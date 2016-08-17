@@ -35,7 +35,7 @@ var Store = require('./lib/store');
  * //
  * // Use 'foo'
  * // $ app foo
- * // => { _: [ 'bar', 'baz', 'bang' ] }
+ * // => { _: [ 'bar', 'baz', 'bang' ], isMacro: 'foo' }
  * //
  * // Remove the 'foo' macro
  * // $ app --macro --del foo
