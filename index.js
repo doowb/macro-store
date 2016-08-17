@@ -78,15 +78,16 @@ module.exports = function macros(name, config) {
 
     var opts = utils.extend({}, options);
     var args = parse(argv, opts);
-    var val;
+    var val, key;
 
     switch (args.macro) {
       case undefined:
         // fall through
       case 'get':
-        val = args._[0] && store.get(args._[0]);
-        if (val === args._[0]) {
-          val = null;
+        key = args._[0];
+        val = key && store.get(key);
+        if (val === key) {
+          val = key = null;
         }
         break;
       case 'del':
@@ -102,6 +103,7 @@ module.exports = function macros(name, config) {
     }
 
     var res = val ? parse(val, opts) : args;
+    if (key) res.isMacro = key;
     res.__proto__ = store;
     return res;
   };
