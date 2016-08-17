@@ -45,12 +45,12 @@ describe('macro-store', function() {
 
   it('should get macros from the store', function() {
     parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
-    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'] });
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'], isMacro: 'foo' });
   });
 
   it('should get a complex macro from the store', function() {
     parser(['--macro', 'foo', 'foo', 'bar', 'baz', '--verbose', '--cwd', 'docs']);
-    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'], verbose: true, cwd: 'docs' });
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'], verbose: true, cwd: 'docs', isMacro: 'foo' });
   });
 
   it('should return original name when macro is not set in the store', function() {
@@ -63,7 +63,7 @@ describe('macro-store', function() {
 
   it('should del macros from the store', function() {
     parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
-    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'] });
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'], isMacro: 'foo' });
 
     parser(['--macro', 'del', 'foo']);
     assert.deepEqual(parser('foo'), { _: ['foo'] });
@@ -72,8 +72,8 @@ describe('macro-store', function() {
   it('should delete all macros when no macro is specified for `--del`', function() {
     parser(['--macro', 'foo', 'foo', 'bar', 'baz']);
     parser(['--macro', 'qux', 'beep', 'boop', 'bop']);
-    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'] });
-    assert.deepEqual(parser('qux'), { _: ['beep', 'boop', 'bop'] });
+    assert.deepEqual(parser('foo'), { _: ['foo', 'bar', 'baz'], isMacro: 'foo' });
+    assert.deepEqual(parser('qux'), { _: ['beep', 'boop', 'bop'], isMacro: 'qux' });
 
     parser(['--macro', 'del']);
     assert.deepEqual(parser(['foo', 'qux']), { _: ['foo', 'qux'] });
